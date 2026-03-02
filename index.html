@@ -1,235 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartGPT AI</title>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#0f172a;
-color:white;
-display:flex;
-height:100vh;
-}
-
-/* Sidebar */
-
-.sidebar{
-width:240px;
-background:#020617;
-padding:20px;
-}
-
-.sidebar h2{
-color:#38bdf8;
-margin-bottom:30px;
-}
-
-.menu-btn{
-width:100%;
-padding:12px;
-margin-bottom:12px;
-background:#1e293b;
-border:none;
-color:white;
-border-radius:8px;
-cursor:pointer;
-text-align:left;
-}
-
-.menu-btn:hover{
-background:#38bdf8;
-color:black;
-}
-
-/* Main */
-
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
-
-/* Header */
-
-.header{
-padding:15px;
-background:#020617;
-font-weight:bold;
-}
-
-/* Pages */
-
-.page{
-display:none;
-flex:1;
-padding:20px;
-overflow:auto;
-}
-
-.active{
-display:block;
-}
-
-/* Chat */
-
-.message{
-background:#1e293b;
-padding:10px;
-margin-bottom:10px;
-border-radius:8px;
-}
-
-.input-area{
-display:flex;
-padding:10px;
-background:#020617;
-}
-
-input{
-flex:1;
-padding:12px;
-border-radius:10px;
-border:none;
-}
-
-button.send{
-margin-left:10px;
-padding:12px;
-background:#38bdf8;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-
-</style>
-
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- Sidebar -->
+<div class="container">
 
-<div class="sidebar">
+<h1>What can I help with?</h1>
 
-<h2>SmartGPT AI</h2>
+<div class="options">
 
-<button class="menu-btn" onclick="showPage('home')">🏠 Home</button>
-
-<button class="menu-btn" onclick="showPage('brainstorm')">💡 Brainstorm</button>
-
-<button class="menu-btn" onclick="showPage('image')">🎨 Create Image</button>
-
-<button class="menu-btn" onclick="showPage('analyze')">📊 Analyze</button>
-
-<button class="menu-btn" onclick="showPage('advice')">🎓 Advice</button>
-
+<div onclick="location.href='image.html'" class="option">
+🎨 Create image
 </div>
 
-<!-- Main -->
-
-<div class="main">
-
-<div class="header" id="title">
-Home
+<div onclick="location.href='analyze.html'" class="option">
+📊 Analyze data
 </div>
 
-<!-- HOME PAGE -->
-
-<div id="home" class="page active">
-<h2>What can I help with?</h2>
-<p>Select any option from sidebar.</p>
+<div onclick="location.href='advice.html'" class="option">
+🎓 Get advice
 </div>
 
-<!-- BRAINSTORM PAGE -->
-
-<div id="brainstorm" class="page">
-<div id="brainstorm-chat"></div>
-</div>
-
-<!-- IMAGE PAGE -->
-
-<div id="image" class="page">
-<h3>Image Generation</h3>
-<p>Connect Image API here</p>
-</div>
-
-<!-- ANALYZE PAGE -->
-
-<div id="analyze" class="page">
-<h3>Analyze Data</h3>
-<p>Connect Analyze API here</p>
-</div>
-
-<!-- ADVICE PAGE -->
-
-<div id="advice" class="page">
-<h3>Get Advice</h3>
-<p>Connect Advice API here</p>
-</div>
-
-<div class="input-area">
-<input id="input" placeholder="Ask SmartGPT...">
-<button class="send" onclick="send()">Send</button>
+<div onclick="location.href='brainstorm.html'" class="option">
+💡 Make a plan
 </div>
 
 </div>
 
-<script>
+<div class="input-bar">
+<input placeholder="Ask SmartGPT...">
+</div>
 
-function showPage(page){
-
-document.querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"));
-
-document.getElementById(page)
-.classList.add("active");
-
-document.getElementById("title")
-.innerText=page.toUpperCase();
-
-}
-
-async function send(){
-
-let input=document.getElementById("input");
-
-if(input.value==="")return;
-
-let activePage=
-document.querySelector(".page.active");
-
-activePage.innerHTML +=
-"<div class='message'>🧑 "+input.value+"</div>";
-
-let msg=input.value;
-input.value="";
-
-/* API call */
-
-const res=
-await fetch("/chat",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message:msg,
-mode:activePage.id
-})
-});
-
-const data=await res.json();
-
-activePage.innerHTML +=
-"<div class='message'>🤖 "+data.reply+"</div>";
-
-}
-
-</script>
+</div>
 
 </body>
 </html>
