@@ -1,30 +1,355 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SmartGPT AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
+display:flex;
+height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:230px;
+background:#020617;
+padding:15px;
+}
+
+.sidebar h2{
+color:#38bdf8;
+}
+
+.sidebar button{
+
+width:100%;
+margin-top:10px;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#1e293b;
+color:white;
+cursor:pointer;
+}
+
+/* Main */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+/* Header */
+
+.header{
+
+background:#020617;
+padding:15px;
+text-align:center;
+font-weight:bold;
+}
+
+/* Home Buttons */
+
+.home{
+
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+}
+
+.cards{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.card{
+
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+cursor:pointer;
+text-align:center;
+}
+
+/* Chat */
+
+.chat{
+
+flex:1;
+overflow:auto;
+padding:20px;
+display:none;
+
+}
+
+.message{
+
+background:#1e293b;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+
+}
+
+.inputArea{
+
+display:flex;
+background:#020617;
+padding:10px;
+
+}
+
+input{
+
+flex:1;
+padding:12px;
+border-radius:10px;
+border:none;
+
+}
+
+.send{
+
+margin-left:10px;
+padding:12px;
+border:none;
+background:#38bdf8;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="container">
+<!-- Sidebar -->
 
-<h1>What can I help with?</h1>
+<div class="sidebar">
 
-<div class="buttons">
+<h2>SmartGPT AI</h2>
 
-<button onclick="location.href='image.html'">🎨 Create Image</button>
+<button onclick="goHome()">🏠 Home</button>
 
-<button onclick="location.href='chat.html'">💡 Brainstorm</button>
+<button onclick="mode('brainstorm')">💡 Brainstorm</button>
 
-<button onclick="location.href='analyze.html'">📊 Analyze Data</button>
+<button onclick="mode('image')">🎨 Create Image</button>
 
-<button onclick="location.href='advice.html'">🎓 Get Advice</button>
+<button onclick="mode('analyze')">📊 Analyze</button>
+
+<button onclick="mode('advice')">🎓 Advice</button>
+
+<hr>
+
+<h4>History</h4>
+
+<div id="history"></div>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<div class="header">
+
+<span id="title">
+What can I help with?
+</span>
+
+</div>
+
+<!-- HOME -->
+
+<div class="home" id="home">
+
+<div class="cards">
+
+<div class="card"
+onclick="mode('image')">
+
+🎨 Create Image
+
+</div>
+
+<div class="card"
+onclick="mode('brainstorm')">
+
+💡 Brainstorm
+
+</div>
+
+<div class="card"
+onclick="mode('analyze')">
+
+📊 Analyze
+
+</div>
+
+<div class="card"
+onclick="mode('advice')">
+
+🎓 Advice
 
 </div>
 
 </div>
+
+</div>
+
+<!-- CHAT -->
+
+<div class="chat" id="chat">
+
+<div id="messages">
+
+<div class="message">
+👋 Hello Ask Anything
+</div>
+
+</div>
+
+</div>
+
+<div class="inputArea">
+
+<input id="input"
+placeholder="Ask SmartGPT...">
+
+<button
+class="send"
+onclick="send()">
+
+Send
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let currentMode="brainstorm";
+
+function goHome(){
+
+document.getElementById("home")
+.style.display="flex";
+
+document.getElementById("chat")
+.style.display="none";
+
+document.getElementById("title")
+.innerText=
+"What can I help with?"
+
+}
+
+function mode(name){
+
+currentMode=name;
+
+document.getElementById("home")
+.style.display="none";
+
+document.getElementById("chat")
+.style.display="block";
+
+document.getElementById("title")
+.innerText=
+name.toUpperCase()
+
+}
+
+async function send(){
+
+let input =
+document.getElementById("input");
+
+if(input.value==="")return;
+
+let msg=input.value;
+
+let box =
+document.getElementById("messages");
+
+box.innerHTML+=
+"<div class='message'>🧑 "+msg+"</div>";
+
+input.value="";
+
+addHistory(msg);
+
+/* API CALL */
+
+const res =
+await fetch("/chat",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:
+JSON.stringify({
+
+message:msg,
+mode:currentMode
+
+})
+
+});
+
+const data=
+await res.json();
+
+box.innerHTML+=
+
+"<div class='message'>🤖 "+data.reply+"</div>";
+
+box.scrollTop=box.scrollHeight;
+
+}
+
+function addHistory(text){
+
+let h=
+document.getElementById("history");
+
+let div=
+document.createElement("div");
+
+div.innerText=
+text.substring(0,20);
+
+div.style.cursor="pointer";
+
+div.onclick=()=>mode(currentMode);
+
+h.prepend(div);
+
+}
+
+</script>
 
 </body>
+
 </html>
