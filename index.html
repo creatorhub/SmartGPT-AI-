@@ -18,25 +18,31 @@ height:100vh;
 /* Sidebar */
 
 .sidebar{
-width:230px;
+width:240px;
 background:#020617;
-padding:15px;
+padding:20px;
 }
 
 .sidebar h2{
 color:#38bdf8;
+margin-bottom:30px;
 }
 
-.sidebar button{
-
+.menu-btn{
 width:100%;
-margin-top:10px;
 padding:12px;
-border:none;
-border-radius:8px;
+margin-bottom:12px;
 background:#1e293b;
+border:none;
 color:white;
+border-radius:8px;
 cursor:pointer;
+text-align:left;
+}
+
+.menu-btn:hover{
+background:#38bdf8;
+color:black;
 }
 
 /* Main */
@@ -50,87 +56,53 @@ flex-direction:column;
 /* Header */
 
 .header{
-
-background:#020617;
 padding:15px;
-text-align:center;
+background:#020617;
 font-weight:bold;
 }
 
-/* Home Buttons */
+/* Pages */
 
-.home{
-
+.page{
+display:none;
 flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-
-}
-
-.cards{
-
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
-
-.card{
-
-background:#1e293b;
 padding:20px;
-border-radius:12px;
-cursor:pointer;
-text-align:center;
+overflow:auto;
+}
+
+.active{
+display:block;
 }
 
 /* Chat */
 
-.chat{
-
-flex:1;
-overflow:auto;
-padding:20px;
-display:none;
-
-}
-
 .message{
-
 background:#1e293b;
 padding:10px;
 margin-bottom:10px;
-border-radius:10px;
-
+border-radius:8px;
 }
 
-.inputArea{
-
+.input-area{
 display:flex;
-background:#020617;
 padding:10px;
-
+background:#020617;
 }
 
 input{
-
 flex:1;
 padding:12px;
 border-radius:10px;
 border:none;
-
 }
 
-.send{
-
+button.send{
 margin-left:10px;
 padding:12px;
-border:none;
 background:#38bdf8;
+border:none;
 border-radius:10px;
 cursor:pointer;
-
 }
 
 </style>
@@ -145,21 +117,15 @@ cursor:pointer;
 
 <h2>SmartGPT AI</h2>
 
-<button onclick="goHome()">🏠 Home</button>
+<button class="menu-btn" onclick="showPage('home')">🏠 Home</button>
 
-<button onclick="mode('brainstorm')">💡 Brainstorm</button>
+<button class="menu-btn" onclick="showPage('brainstorm')">💡 Brainstorm</button>
 
-<button onclick="mode('image')">🎨 Create Image</button>
+<button class="menu-btn" onclick="showPage('image')">🎨 Create Image</button>
 
-<button onclick="mode('analyze')">📊 Analyze</button>
+<button class="menu-btn" onclick="showPage('analyze')">📊 Analyze</button>
 
-<button onclick="mode('advice')">🎓 Advice</button>
-
-<hr>
-
-<h4>History</h4>
-
-<div id="history"></div>
+<button class="menu-btn" onclick="showPage('advice')">🎓 Advice</button>
 
 </div>
 
@@ -167,189 +133,103 @@ cursor:pointer;
 
 <div class="main">
 
-<div class="header">
-
-<span id="title">
-What can I help with?
-</span>
-
+<div class="header" id="title">
+Home
 </div>
 
-<!-- HOME -->
+<!-- HOME PAGE -->
 
-<div class="home" id="home">
-
-<div class="cards">
-
-<div class="card"
-onclick="mode('image')">
-
-🎨 Create Image
-
+<div id="home" class="page active">
+<h2>What can I help with?</h2>
+<p>Select any option from sidebar.</p>
 </div>
 
-<div class="card"
-onclick="mode('brainstorm')">
+<!-- BRAINSTORM PAGE -->
 
-💡 Brainstorm
-
+<div id="brainstorm" class="page">
+<div id="brainstorm-chat"></div>
 </div>
 
-<div class="card"
-onclick="mode('analyze')">
+<!-- IMAGE PAGE -->
 
-📊 Analyze
-
+<div id="image" class="page">
+<h3>Image Generation</h3>
+<p>Connect Image API here</p>
 </div>
 
-<div class="card"
-onclick="mode('advice')">
+<!-- ANALYZE PAGE -->
 
-🎓 Advice
-
+<div id="analyze" class="page">
+<h3>Analyze Data</h3>
+<p>Connect Analyze API here</p>
 </div>
 
+<!-- ADVICE PAGE -->
+
+<div id="advice" class="page">
+<h3>Get Advice</h3>
+<p>Connect Advice API here</p>
 </div>
 
-</div>
-
-<!-- CHAT -->
-
-<div class="chat" id="chat">
-
-<div id="messages">
-
-<div class="message">
-👋 Hello Ask Anything
-</div>
-
-</div>
-
-</div>
-
-<div class="inputArea">
-
-<input id="input"
-placeholder="Ask SmartGPT...">
-
-<button
-class="send"
-onclick="send()">
-
-Send
-
-</button>
-
+<div class="input-area">
+<input id="input" placeholder="Ask SmartGPT...">
+<button class="send" onclick="send()">Send</button>
 </div>
 
 </div>
 
 <script>
 
-let currentMode="brainstorm";
+function showPage(page){
 
-function goHome(){
+document.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
 
-document.getElementById("home")
-.style.display="flex";
-
-document.getElementById("chat")
-.style.display="none";
+document.getElementById(page)
+.classList.add("active");
 
 document.getElementById("title")
-.innerText=
-"What can I help with?"
-
-}
-
-function mode(name){
-
-currentMode=name;
-
-document.getElementById("home")
-.style.display="none";
-
-document.getElementById("chat")
-.style.display="block";
-
-document.getElementById("title")
-.innerText=
-name.toUpperCase()
+.innerText=page.toUpperCase();
 
 }
 
 async function send(){
 
-let input =
-document.getElementById("input");
+let input=document.getElementById("input");
 
 if(input.value==="")return;
 
+let activePage=
+document.querySelector(".page.active");
+
+activePage.innerHTML +=
+"<div class='message'>🧑 "+input.value+"</div>";
+
 let msg=input.value;
-
-let box =
-document.getElementById("messages");
-
-box.innerHTML+=
-"<div class='message'>🧑 "+msg+"</div>";
-
 input.value="";
 
-addHistory(msg);
+/* API call */
 
-/* API CALL */
-
-const res =
+const res=
 await fetch("/chat",{
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
-body:
-JSON.stringify({
-
+body:JSON.stringify({
 message:msg,
-mode:currentMode
-
+mode:activePage.id
 })
-
 });
 
-const data=
-await res.json();
+const data=await res.json();
 
-box.innerHTML+=
-
+activePage.innerHTML +=
 "<div class='message'>🤖 "+data.reply+"</div>";
-
-box.scrollTop=box.scrollHeight;
-
-}
-
-function addHistory(text){
-
-let h=
-document.getElementById("history");
-
-let div=
-document.createElement("div");
-
-div.innerText=
-text.substring(0,20);
-
-div.style.cursor="pointer";
-
-div.onclick=()=>mode(currentMode);
-
-h.prepend(div);
 
 }
 
 </script>
 
 </body>
-
 </html>
