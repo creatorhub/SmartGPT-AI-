@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartGPT AI</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:230px;
+background:#020617;
+padding:20px;
+}
+
+.sidebar h2{
+color:#38bdf8;
+}
+
+.newchat{
+background:#38bdf8;
+border:none;
+padding:10px;
+width:100%;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+
+/* Main */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+/* Header */
+
+.header{
+padding:15px;
+background:#020617;
+font-size:20px;
+font-weight:bold;
+text-align:center;
+}
+
+/* Chat Area */
+
+.chat-area{
+flex:1;
+overflow:auto;
+padding:20px;
+}
+
+.message{
+background:#1e293b;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+/* Input Box */
+
+.input-area{
+display:flex;
+padding:10px;
+background:#020617;
+}
+
+input{
+flex:1;
+padding:12px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+button{
+margin-left:10px;
+background:#38bdf8;
+border:none;
+padding:12px;
+border-radius:10px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h2>SmartGPT AI</h2>
+
+<button class="newchat">
++ New Chat
+</button>
+
+<p style="margin-top:20px;">
+Smart AI Assistant
+</p>
+
+</div>
+
+
+<!-- Main -->
+
+<div class="main">
+
+<div class="header">
+SmartGPT AI
+</div>
+
+<div class="chat-area" id="chat">
+
+<div class="message">
+👋 Hello! Ask me anything.
+</div>
+
+</div>
+
+
+<div class="input-area">
+
+<input id="question"
+placeholder="Ask anything...">
+
+<button onclick="sendMessage()">
+Send
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function sendMessage(){
+
+let input =
+document.getElementById("question");
+
+let chat =
+document.getElementById("chat");
+
+if(input.value==="") return;
+
+chat.innerHTML +=
+"<div class='message'>🧑 "+input.value+"</div>";
+
+input.value="";
+
+/* Later API connect here */
+
+}
+
+</script>
+
+</body>
+</html>
