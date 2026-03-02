@@ -3,39 +3,124 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartGPT AI</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+background:#0b0f19;
+color:white;
+font-family:Arial, Helvetica, sans-serif;
+display:flex;
+flex-direction:column;
+height:100vh;
+}
+
+/* Center Section */
+
+.center{
+flex:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.center h1{
+font-size:28px;
+font-weight:500;
+margin-bottom:40px;
+}
+
+/* Suggestion Buttons */
+
+.suggestions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+max-width:500px;
+width:100%;
+}
+
+.suggestions div{
+border:1px solid #2a2f3a;
+padding:14px;
+border-radius:30px;
+cursor:pointer;
+transition:0.2s;
+background:#111827;
+}
+
+.suggestions div:hover{
+background:#1f2937;
+}
+
+/* Bottom Input */
+
+.bottom{
+padding:15px;
+background:transparent;
+display:flex;
+justify-content:center;
+}
+
+.input-box{
+width:95%;
+max-width:600px;
+display:flex;
+background:#111827;
+border:1px solid #2a2f3a;
+border-radius:30px;
+padding:8px 15px;
+}
+
+.input-box input{
+flex:1;
+background:transparent;
+border:none;
+color:white;
+outline:none;
+font-size:16px;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="center">
 
 <h1>What can I help with?</h1>
 
-<div class="options">
+<div class="suggestions">
 
-<div onclick="location.href='image.html'" class="option">
+<div onclick="location.href='image.html'">
 🎨 Create image
 </div>
 
-<div onclick="location.href='analyze.html'" class="option">
+<div onclick="location.href='analyze.html'">
 📊 Analyze data
 </div>
 
-<div onclick="location.href='advice.html'" class="option">
+<div onclick="location.href='advice.html'">
 🎓 Get advice
 </div>
 
-<div onclick="location.href='brainstorm.html'" class="option">
+<div onclick="location.href='brainstorm.html'">
 💡 Make a plan
 </div>
 
 </div>
 
-<div class="input-bar">
-<input placeholder="Ask SmartGPT...">
 </div>
 
+<div class="bottom">
+<div class="input-box">
+<input placeholder="Ask SmartGPT...">
+</div>
 </div>
 
 </body>
