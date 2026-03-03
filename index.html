@@ -116,12 +116,39 @@ margin-bottom:6px;
 background:#2a2a2a;
 }
 
-/* CENTER AREA (Scrollable Only This) */
+/* PROFILE SECTION (BOTTOM) */
+
+.sidebar-profile{
+display:flex;
+align-items:center;
+padding:15px;
+border-top:1px solid #2c2c2c;
+cursor:pointer;
+background:#171717;
+}
+
+.sidebar-profile:hover{
+background:#2a2a2a;
+}
+
+.profile-img{
+width:32px;
+height:32px;
+border-radius:50%;
+margin-right:10px;
+}
+
+.profile-name{
+font-size:14px;
+color:#ddd;
+}
+
+/* CENTER AREA */
 
 .center{
 position:absolute;
-top:55px;          /* below topbar */
-bottom:90px;       /* above bottom input */
+top:55px;
+bottom:90px;
 left:0;
 right:0;
 display:flex;
@@ -221,8 +248,14 @@ background:#4a4a4a;
 <div class="sidebar-item">➕ New chat</div>
 <div class="sidebar-item">💡 Ideas</div>
 <div class="sidebar-item">📊 Analysis</div>
-<div class="sidebar-item">⚙ Settings</div>
 
+</div>
+
+<!-- PROFILE BOTTOM -->
+
+<div class="sidebar-profile" onclick="openSettings()">
+<img src="https://i.pravatar.cc/40" class="profile-img">
+<div class="profile-name">Aman Prajapati</div>
 </div>
 
 </div>
@@ -255,6 +288,10 @@ background:#4a4a4a;
 <script>
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("active");
+}
+
+function openSettings(){
+window.location.href="settings.html";
 }
 </script>
 
