@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - SmartGPT</title>
+
+<style>
+
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Top Bar */
+
+.topbar{
+display:flex;
+align-items:center;
+padding:15px;
+font-size:20px;
+font-weight:500;
+}
+
+.back{
+font-size:22px;
+margin-right:15px;
+cursor:pointer;
+}
+
+/* Profile Section */
+
+.profile-container{
+text-align:center;
+padding:20px;
+}
+
+.profile-container img{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+cursor:pointer;
+}
+
+.profile-container input[type="file"]{
+display:none;
+}
+
+.profile-container h3{
+margin-top:15px;
+font-weight:500;
+}
+
+/* Form Section */
+
+.form{
+padding:20px;
+}
+
+.form-group{
+margin-bottom:20px;
+}
+
+.form-group label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+color:#aaa;
+}
+
+.form-group input,
+.form-group textarea{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+background:#2a2a2a;
+color:white;
+font-size:15px;
+outline:none;
+}
+
+.form-group textarea{
+resize:none;
+height:80px;
+}
+
+/* Save Button */
+
+.save-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:25px;
+background:#10a37f;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.save-btn:hover{
+background:#0e8e6d;
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<div class="back" onclick="goBack()">←</div>
+<div>Profile</div>
+</div>
+
+<div class="profile-container">
+<label for="imageUpload">
+<img id="profileImage" src="https://i.pravatar.cc/150">
+</label>
+<input type="file" id="imageUpload" onchange="changeImage(event)">
+<h3 id="displayName">Your Name</h3>
+</div>
+
+<div class="form">
+
+<div class="form-group">
+<label>Name</label>
+<input type="text" id="nameInput" placeholder="Enter your name">
+</div>
+
+<div class="form-group">
+<label>Bio</label>
+<textarea id="bioInput" placeholder="Write something about you..."></textarea>
+</div>
+
+<button class="save-btn" onclick="saveProfile()">Save Changes</button>
+
+</div>
+
+<script>
+
+/* Load Saved Data */
+window.onload = function(){
+let name = localStorage.getItem("profileName");
+let bio = localStorage.getItem("profileBio");
+let image = localStorage.getItem("profileImage");
+
+if(name){
+document.getElementById("displayName").innerText = name;
+document.getElementById("nameInput").value = name;
+}
+
+if(bio){
+document.getElementById("bioInput").value = bio;
+}
+
+if(image){
+document.getElementById("profileImage").src = image;
+}
+}
+
+/* Change Image */
+function changeImage(event){
+let file = event.target.files[0];
+if(file){
+let reader = new FileReader();
+reader.onload = function(e){
+localStorage.setItem("profileImage", e.target.result);
+document.getElementById("profileImage").src = e.target.result;
+}
+reader.readAsDataURL(file);
+}
+}
+
+/* Save Profile */
+function saveProfile(){
+let name = document.getElementById("nameInput").value;
+let bio = document.getElementById("bioInput").value;
+
+localStorage.setItem("profileName", name);
+localStorage.setItem("profileBio", bio);
+
+document.getElementById("displayName").innerText = name;
+
+alert("Profile updated successfully!");
+}
+
+/* Back */
+function goBack(){
+window.location.href="settings.html";
+}
+
+</script>
+
+</body>
+</html>
