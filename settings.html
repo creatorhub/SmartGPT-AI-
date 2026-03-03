@@ -29,11 +29,36 @@ margin-right:15px;
 cursor:pointer;
 }
 
+/* Profile Top Section */
+
+.profile-section{
+text-align:center;
+margin-top:10px;
+margin-bottom:20px;
+}
+
+.profile-section img{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+cursor:pointer;
+}
+
+.profile-section input{
+display:none;
+}
+
+.profile-name{
+margin-top:10px;
+font-size:18px;
+}
+
+/* Container */
+
 .container{
 padding:15px;
 }
-
-/* Section Title */
 
 .section-title{
 margin-top:25px;
@@ -47,11 +72,10 @@ font-size:14px;
 .setting-card{
 background:#2a2a2a;
 padding:18px;
-border-radius:18px;
-margin-bottom:12px;
+border-radius:22px;
+margin-bottom:14px;
 display:flex;
 align-items:center;
-justify-content:space-between;
 cursor:pointer;
 }
 
@@ -59,21 +83,8 @@ cursor:pointer;
 background:#333;
 }
 
-.setting-left{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.icon{
-font-size:18px;
-opacity:0.8;
-}
-
-.subtext{
-font-size:13px;
-color:#aaa;
-margin-top:3px;
+.setting-card span{
+font-size:16px;
 }
 
 /* Logout */
@@ -81,12 +92,9 @@ margin-top:3px;
 .logout{
 background:#2a2a2a;
 padding:18px;
-border-radius:18px;
-margin-top:30px;
+border-radius:22px;
+margin-top:25px;
 color:#ff4d4d;
-display:flex;
-align-items:center;
-gap:10px;
 cursor:pointer;
 }
 
@@ -103,71 +111,90 @@ background:#333;
 <div>Settings</div>
 </div>
 
+<!-- Profile Image Section -->
+
+<div class="profile-section">
+<label for="uploadImage">
+<img id="profileImage" src="https://i.pravatar.cc/150">
+</label>
+<input type="file" id="uploadImage" onchange="changeImage(event)">
+<div class="profile-name" id="profileName">Your Name</div>
+</div>
+
 <div class="container">
 
 <div class="section-title">Account</div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">👤</div>
-<div>
-<div>Profile</div>
-<div class="subtext">Edit your name & photo</div>
-</div>
-</div>
+<div class="setting-card" onclick="openPage('profile.html')">
+<span>👤 Profile</span>
 </div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">📧</div>
-<div>
-<div>Email</div>
-<div class="subtext">your@email.com</div>
-</div>
-</div>
+<div class="setting-card" onclick="openPage('email.html')">
+<span>📧 Email</span>
 </div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">🎨</div>
-<div>
-<div>Appearance</div>
-<div class="subtext">System (Default)</div>
-</div>
-</div>
+<div class="setting-card" onclick="openPage('appearance.html')">
+<span>🎨 Appearance</span>
 </div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">🔔</div>
-<div>Notifications</div>
-</div>
+<div class="setting-card" onclick="openPage('notifications.html')">
+<span>🔔 Notifications</span>
 </div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">🔒</div>
-<div>Security</div>
-</div>
+<div class="setting-card" onclick="openPage('security.html')">
+<span>🔒 Security</span>
 </div>
 
-<div class="setting-card">
-<div class="setting-left">
-<div class="icon">ℹ</div>
-<div>About</div>
-</div>
+<div class="setting-card" onclick="openPage('about.html')">
+<span>ℹ About</span>
 </div>
 
-<div class="logout">
+<div class="logout" onclick="logout()">
 🚪 Log out
 </div>
 
 </div>
 
 <script>
+
 function goBack(){
 window.location.href="index.html";
 }
+
+function openPage(page){
+window.location.href = page;
+}
+
+/* Load saved profile */
+window.onload = function(){
+let name = localStorage.getItem("profileName");
+let image = localStorage.getItem("profileImage");
+
+if(name){
+document.getElementById("profileName").innerText = name;
+}
+
+if(image){
+document.getElementById("profileImage").src = image;
+}
+}
+
+function changeImage(event){
+let file = event.target.files[0];
+if(file){
+let reader = new FileReader();
+reader.onload = function(e){
+localStorage.setItem("profileImage", e.target.result);
+document.getElementById("profileImage").src = e.target.result;
+}
+reader.readAsDataURL(file);
+}
+}
+
+function logout(){
+alert("Logged out!");
+}
+
 </script>
 
 </body>
