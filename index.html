@@ -46,13 +46,51 @@ flex-direction:column;
 z-index:1000;
 }
 .sidebar.active{left:0;}
+
 .sidebar-header{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:15px;
 border-bottom:1px solid #2c2c2c;
 }
-.sidebar-content{flex:1;overflow:auto;padding:15px;}
+
+.sidebar-content{
+flex:1;
+overflow-y:auto;
+padding:15px;
+}
+
+.search-box{
+display:flex;
+align-items:center;
+background:#2a2a2a;
+border-radius:25px;
+padding:8px 12px;
+margin-bottom:15px;
+}
+
+.search-box input{
+flex:1;
+background:transparent;
+border:none;
+outline:none;
+color:white;
+}
+
+.sidebar-item{
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+color:#ddd;
+margin-bottom:6px;
+font-size:14px;
+}
+
+.sidebar-item:hover{
+background:#2a2a2a;
+}
+
 .sidebar-profile{
 display:flex;
 align-items:center;
@@ -60,8 +98,13 @@ padding:15px;
 border-top:1px solid #2c2c2c;
 cursor:pointer;
 }
+
 .profile-img{
-width:32px;height:32px;border-radius:50%;margin-right:10px;
+width:32px;
+height:32px;
+border-radius:50%;
+margin-right:10px;
+object-fit:cover;
 }
 
 /* CHAT AREA */
@@ -73,6 +116,8 @@ left:0;
 right:0;
 overflow-y:auto;
 padding:20px;
+display:flex;
+flex-direction:column;
 }
 
 .message{
@@ -81,6 +126,7 @@ max-width:80%;
 padding:10px 15px;
 border-radius:15px;
 line-height:1.4;
+word-wrap:break-word;
 }
 
 .user{
@@ -91,6 +137,7 @@ margin-left:auto;
 
 .bot{
 background:#2a2a2a;
+align-self:flex-start;
 }
 
 /* INPUT */
@@ -139,26 +186,51 @@ cursor:pointer;
 
 <body>
 
+<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
+
 <div class="sidebar-header">
 <div>SmartGPT</div>
 <div onclick="toggleMenu()">✕</div>
 </div>
-<div class="sidebar-content"></div>
+
+<div class="sidebar-content">
+
+<div class="search-box">
+🔍 <input placeholder="Search chats">
+</div>
+
+<div class="sidebar-item">✏️ New chat</div>
+<div class="sidebar-item">🖼 Images</div>
+<div class="sidebar-item">🧩 Apps</div>
+<div class="sidebar-item">📁 New project</div>
+
+<h4 style="color:#aaa;margin-top:20px;">Your chats</h4>
+
+<div class="sidebar-item">AI Website Banane Ka Tarika</div>
+<div class="sidebar-item">Earning Website Banaye</div>
+<div class="sidebar-item">3D Game Web Development</div>
+
+</div>
+
 <div class="sidebar-profile">
 <img id="sidebarProfileImg" src="https://i.pravatar.cc/40" class="profile-img">
 <div id="sidebarProfileName">User</div>
 </div>
+
 </div>
 
+<!-- TOP BAR -->
 <div class="topbar">
 <div class="menu" onclick="toggleMenu()">☰</div>
 <div class="title">SmartGPT</div>
 <div></div>
 </div>
 
+<!-- CHAT -->
 <div id="chat" class="chat-container"></div>
 
+<!-- INPUT -->
 <div class="bottom">
 <div class="input-wrapper">
 <input id="chatInput" placeholder="Ask anything">
@@ -170,12 +242,12 @@ cursor:pointer;
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
-/* Sidebar */
+/* Sidebar toggle */
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("active");
 }
 
-/* Load Profile */
+/* Load profile */
 window.onload = function(){
 let name = localStorage.getItem("profileName");
 let img = localStorage.getItem("profileImage");
@@ -183,12 +255,12 @@ if(name) document.getElementById("sidebarProfileName").innerText = name;
 if(img) document.getElementById("sidebarProfileImg").src = img;
 }
 
-/* Enter key */
-document.getElementById("chatInput").addEventListener("keypress", function(e){
+/* Enter key support */
+document.getElementById("chatInput").addEventListener("keydown", function(e){
 if(e.key === "Enter") sendMessage();
 });
 
-/* Add message to UI */
+/* Add message */
 function addMessage(text, type){
 let div = document.createElement("div");
 div.className = "message " + type;
@@ -209,8 +281,7 @@ let isLoggedIn = localStorage.getItem("loggedIn");
 
 /* Guest limit */
 if(isLoggedIn !== "true"){
-let count = localStorage.getItem("guestMessages");
-count = count ? parseInt(count) : 0;
+let count = parseInt(localStorage.getItem("guestMessages") || 0);
 count++;
 localStorage.setItem("guestMessages", count);
 
@@ -224,9 +295,13 @@ return;
 addMessage(message,"user");
 input.value = "";
 
-addMessage("Thinking...","bot");
+let loadingMsg = document.createElement("div");
+loadingMsg.className = "message bot";
+loadingMsg.innerText = "Thinking...";
+document.getElementById("chat").appendChild(loadingMsg);
 
 try{
+
 let response = await fetch(API_URL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
@@ -240,11 +315,16 @@ message:message
 
 let result = await response.json();
 
-document.querySelector(".bot:last-child").remove();
-addMessage(result.reply || "Error","bot");
+loadingMsg.remove();
 
-}catch(err){
-document.querySelector(".bot:last-child").remove();
+if(result && result.reply){
+addMessage(result.reply,"bot");
+}else{
+addMessage("AI error response","bot");
+}
+
+}catch(error){
+loadingMsg.remove();
 addMessage("Server error","bot");
 }
 
