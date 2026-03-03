@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - SmartGPT</title>
+
+<style>
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:system-ui;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+width:90%;
+max-width:350px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+background:#2a2a2a;
+color:white;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:#10a37f;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.switch{
+text-align:center;
+margin-top:15px;
+font-size:14px;
+color:#aaa;
+cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+
+<h2>Login</h2>
+
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<div class="switch" onclick="goRegister()">Don't have account? Register</div>
+
+</div>
+
+<script>
+
+function login(){
+
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
+
+let savedUser = JSON.parse(localStorage.getItem("user"));
+
+if(savedUser && savedUser.email === email && savedUser.password === password){
+
+localStorage.setItem("loggedIn", "true");
+window.location.href = "index.html";
+
+}else{
+alert("Invalid login");
+}
+
+}
+
+function goRegister(){
+window.location.href="register.html";
+}
+
+</script>
+
+</body>
+</html>
