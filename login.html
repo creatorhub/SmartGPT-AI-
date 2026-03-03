@@ -68,20 +68,49 @@ cursor:pointer;
 
 <script>
 
-function login(){
+const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+async function login(){
 
-let savedUser = JSON.parse(localStorage.getItem("user"));
+let email = document.getElementById("email").value.trim();
+let password = document.getElementById("password").value.trim();
 
-if(savedUser && savedUser.email === email && savedUser.password === password){
+if(!email || !password){
+alert("Please fill all fields");
+return;
+}
 
-localStorage.setItem("loggedIn", "true");
-window.location.href = "index.html";
+// userId generate from email
+let userId = email.replace(/[^a-zA-Z0-9]/g,"_");
+
+try{
+
+let response = await fetch(API_URL,{
+method:"POST",
+body: JSON.stringify({
+action:"login",
+userId:userId,
+password:password
+})
+});
+
+let result = await response.json();
+
+if(result.success){
+
+localStorage.setItem("loggedIn","true");
+localStorage.setItem("userId", userId);
+localStorage.setItem("profileName", result.user.name);
+localStorage.setItem("profileEmail", result.user.email);
+
+window.location.href="index.html";
 
 }else{
-alert("Invalid login");
+alert(result.message || "Login failed");
+}
+
+}catch(err){
+alert("Server error");
 }
 
 }
