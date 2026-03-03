@@ -69,23 +69,55 @@ cursor:pointer;
 
 <script>
 
-function register(){
+const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
-let name = document.getElementById("name").value;
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+async function register(){
 
-let user = {
+let name = document.getElementById("name").value.trim();
+let email = document.getElementById("email").value.trim();
+let password = document.getElementById("password").value.trim();
+
+if(!name || !email || !password){
+alert("Please fill all fields");
+return;
+}
+
+// same userId logic as login
+let userId = email.replace(/[^a-zA-Z0-9]/g,"_");
+
+try{
+
+let response = await fetch(API_URL,{
+method:"POST",
+body: JSON.stringify({
+action:"register",
+userId:userId,
 name:name,
 email:email,
 password:password
-};
+})
+});
 
-localStorage.setItem("user", JSON.stringify(user));
-localStorage.setItem("loggedIn", "true");
+let result = await response.json();
+
+if(result.success){
+
+// auto login
+localStorage.setItem("loggedIn","true");
+localStorage.setItem("userId", userId);
 localStorage.setItem("profileName", name);
+localStorage.setItem("profileEmail", email);
 
 window.location.href="index.html";
+
+}else{
+alert(result.message || "Registration failed");
+}
+
+}catch(err){
+alert("Server error");
+}
+
 }
 
 function goLogin(){
