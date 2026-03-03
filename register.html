@@ -42,6 +42,10 @@ font-size:16px;
 cursor:pointer;
 }
 
+button:hover{
+opacity:0.9;
+}
+
 .switch{
 text-align:center;
 margin-top:15px;
@@ -71,57 +75,63 @@ cursor:pointer;
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
+/* Auto redirect if already logged in */
+if(localStorage.getItem("loggedIn") === "true"){
+  window.location.href = "index.html";
+}
+
 async function register(){
 
-let name = document.getElementById("name").value.trim();
-let email = document.getElementById("email").value.trim();
-let password = document.getElementById("password").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-if(!name || !email || !password){
-alert("Please fill all fields");
-return;
-}
+  if(!name || !email || !password){
+    alert("Please fill all fields");
+    return;
+  }
 
-// same userId logic as login
-let userId = email.replace(/[^a-zA-Z0-9]/g,"_");
+  const userId = email.toLowerCase().replace(/[^a-z0-9]/g,"_");
 
-try{
+  try{
 
-let response = await fetch(API_URL,{
-method:"POST",
-body: JSON.stringify({
-action:"register",
-userId:userId,
-name:name,
-email:email,
-password:password
-})
-});
+    const response = await fetch(API_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        action:"register",
+        userId:userId,
+        name:name,
+        email:email,
+        password:password
+      })
+    });
 
-let result = await response.json();
+    const result = await response.json();
 
-if(result.success){
+    if(result.success){
 
-// auto login
-localStorage.setItem("loggedIn","true");
-localStorage.setItem("userId", userId);
-localStorage.setItem("profileName", name);
-localStorage.setItem("profileEmail", email);
+      localStorage.setItem("loggedIn","true");
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("profileName", name);
+      localStorage.setItem("profileEmail", email);
 
-window.location.href="index.html";
+      window.location.href="index.html";
 
-}else{
-alert(result.message || "Registration failed");
-}
+    }else{
+      alert(result.message || "Registration failed");
+    }
 
-}catch(err){
-alert("Server error");
-}
+  }catch(error){
+    alert("Server connection error");
+  }
 
 }
 
 function goLogin(){
-window.location.href="login.html";
+  window.location.href="login.html";
 }
 
 </script>
