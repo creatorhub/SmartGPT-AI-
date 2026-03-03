@@ -42,10 +42,6 @@ font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-opacity:0.9;
-}
-
 .switch{
 text-align:center;
 margin-top:15px;
@@ -75,7 +71,6 @@ cursor:pointer;
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
-/* Redirect if already logged in */
 if(localStorage.getItem("loggedIn") === "true"){
   window.location.href = "index.html";
 }
@@ -98,7 +93,7 @@ async function register(){
     const response = await fetch(API_URL,{
       method:"POST",
       headers:{
-        "Content-Type":"application/json"
+        "Content-Type":"text/plain"   // ✅ CORS FIX
       },
       body: JSON.stringify({
         action:"register",
@@ -109,11 +104,6 @@ async function register(){
       })
     });
 
-    // Agar server 200 return nahi karta
-    if(!response.ok){
-      throw new Error("HTTP error " + response.status);
-    }
-
     const result = await response.json();
 
     if(result.success){
@@ -123,7 +113,7 @@ async function register(){
       localStorage.setItem("profileName", name);
       localStorage.setItem("profileEmail", email);
 
-      alert("Registration successful ✅");
+      alert("Backend Connected ✅");
 
       window.location.href="index.html";
 
@@ -133,7 +123,7 @@ async function register(){
 
   }catch(error){
     console.error(error);
-    alert("Server connection error ❌\n\nCheck Apps Script deployment & CORS settings.");
+    alert("Server connection error ❌");
   }
 
 }
