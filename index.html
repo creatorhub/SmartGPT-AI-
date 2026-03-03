@@ -27,85 +27,11 @@ justify-content:space-between;
 padding:0 15px;
 background:#1e1e1e;
 z-index:500;
+border-bottom:1px solid #2a2a2a;
 }
 
 .menu{font-size:22px;cursor:pointer;}
 .title{font-size:18px;font-weight:500;}
-
-/* SIDEBAR */
-.sidebar{
-position:fixed;
-top:0;
-left:-320px;
-width:300px;
-height:100%;
-background:#171717;
-transition:0.3s;
-display:flex;
-flex-direction:column;
-z-index:1000;
-}
-.sidebar.active{left:0;}
-
-.sidebar-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-border-bottom:1px solid #2c2c2c;
-}
-
-.sidebar-content{
-flex:1;
-overflow-y:auto;
-padding:15px;
-}
-
-.search-box{
-display:flex;
-align-items:center;
-background:#2a2a2a;
-border-radius:25px;
-padding:8px 12px;
-margin-bottom:15px;
-}
-
-.search-box input{
-flex:1;
-background:transparent;
-border:none;
-outline:none;
-color:white;
-}
-
-.sidebar-item{
-padding:10px;
-border-radius:8px;
-cursor:pointer;
-color:#ddd;
-margin-bottom:6px;
-font-size:14px;
-}
-
-.sidebar-item:hover{
-background:#2a2a2a;
-}
-
-.sidebar-profile{
-display:flex;
-align-items:center;
-padding:15px;
-border-top:1px solid #2c2c2c;
-cursor:pointer;
-}
-
-.profile-img{
-width:32px;
-height:32px;
-border-radius:50%;
-margin-right:10px;
-object-fit:cover;
-}
 
 /* CHAT AREA */
 .chat-container{
@@ -123,16 +49,16 @@ flex-direction:column;
 .message{
 margin-bottom:15px;
 max-width:80%;
-padding:10px 15px;
-border-radius:15px;
+padding:12px 16px;
+border-radius:18px;
 line-height:1.4;
 word-wrap:break-word;
+font-size:15px;
 }
 
 .user{
 background:#10a37f;
 align-self:flex-end;
-margin-left:auto;
 }
 
 .bot{
@@ -148,13 +74,14 @@ left:0;
 width:100%;
 padding:15px;
 background:#1e1e1e;
+border-top:1px solid #2a2a2a;
 display:flex;
 justify-content:center;
 }
 
 .input-wrapper{
 width:95%;
-max-width:650px;
+max-width:700px;
 display:flex;
 align-items:center;
 background:#2a2a2a;
@@ -172,65 +99,29 @@ font-size:16px;
 }
 
 .send{
-background:#3a3a3a;
+background:#10a37f;
 border:none;
 color:white;
-width:38px;
-height:38px;
+width:40px;
+height:40px;
 border-radius:50%;
 margin-left:8px;
 cursor:pointer;
+font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
-<div id="sidebar" class="sidebar">
-
-<div class="sidebar-header">
-<div>SmartGPT</div>
-<div onclick="toggleMenu()">✕</div>
-</div>
-
-<div class="sidebar-content">
-
-<div class="search-box">
-🔍 <input placeholder="Search chats">
-</div>
-
-<div class="sidebar-item">✏️ New chat</div>
-<div class="sidebar-item">🖼 Images</div>
-<div class="sidebar-item">🧩 Apps</div>
-<div class="sidebar-item">📁 New project</div>
-
-<h4 style="color:#aaa;margin-top:20px;">Your chats</h4>
-
-<div class="sidebar-item">AI Website Banane Ka Tarika</div>
-<div class="sidebar-item">Earning Website Banaye</div>
-<div class="sidebar-item">3D Game Web Development</div>
-
-</div>
-
-<div class="sidebar-profile">
-<img id="sidebarProfileImg" src="https://i.pravatar.cc/40" class="profile-img">
-<div id="sidebarProfileName">User</div>
-</div>
-
-</div>
-
-<!-- TOP BAR -->
 <div class="topbar">
-<div class="menu" onclick="toggleMenu()">☰</div>
+<div class="menu">☰</div>
 <div class="title">SmartGPT</div>
 <div></div>
 </div>
 
-<!-- CHAT -->
 <div id="chat" class="chat-container"></div>
 
-<!-- INPUT -->
 <div class="bottom">
 <div class="input-wrapper">
 <input id="chatInput" placeholder="Ask anything">
@@ -242,20 +133,7 @@ cursor:pointer;
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxblCbzuvE8n8dOwfVo-hPlyQIo2fnTMqD_QahkDbhapGA0QV8dl6j5njUq_-X2BH0MYg/exec";
 
-/* Sidebar toggle */
-function toggleMenu(){
-document.getElementById("sidebar").classList.toggle("active");
-}
-
-/* Load profile */
-window.onload = function(){
-let name = localStorage.getItem("profileName");
-let img = localStorage.getItem("profileImage");
-if(name) document.getElementById("sidebarProfileName").innerText = name;
-if(img) document.getElementById("sidebarProfileImg").src = img;
-}
-
-/* Enter key support */
+/* Enter key */
 document.getElementById("chatInput").addEventListener("keydown", function(e){
 if(e.key === "Enter") sendMessage();
 });
@@ -269,63 +147,48 @@ document.getElementById("chat").appendChild(div);
 document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
 
-/* Send Message */
+/* Send message */
 async function sendMessage(){
 
 let input = document.getElementById("chatInput");
 let message = input.value.trim();
 if(!message) return;
 
-let userId = localStorage.getItem("userId");
-let isLoggedIn = localStorage.getItem("loggedIn");
-
-/* Guest limit */
-if(isLoggedIn !== "true"){
-let count = parseInt(localStorage.getItem("guestMessages") || 0);
-count++;
-localStorage.setItem("guestMessages", count);
-
-if(count > 5){
-alert("Free limit reached. Please login.");
-window.location.href="login.html";
-return;
-}
-}
-
 addMessage(message,"user");
 input.value = "";
 
-let loadingMsg = document.createElement("div");
-loadingMsg.className = "message bot";
-loadingMsg.innerText = "Thinking...";
-document.getElementById("chat").appendChild(loadingMsg);
+let loading = document.createElement("div");
+loading.className = "message bot";
+loading.innerText = "Thinking...";
+document.getElementById("chat").appendChild(loading);
 
 try{
 
 let response = await fetch(API_URL,{
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{
+"Content-Type":"text/plain"   // ✅ CORS FIX
+},
 body: JSON.stringify({
 action:"chat",
 ai:"openai",
-userId:userId || "guest",
 message:message
 })
 });
 
 let result = await response.json();
 
-loadingMsg.remove();
+loading.remove();
 
-if(result && result.reply){
+if(result.success){
 addMessage(result.reply,"bot");
 }else{
-addMessage("AI error response","bot");
+addMessage("AI error ❌","bot");
 }
 
 }catch(error){
-loadingMsg.remove();
-addMessage("Server error","bot");
+loading.remove();
+addMessage("Server error ❌","bot");
 }
 
 }
