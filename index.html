@@ -136,6 +136,7 @@ width:32px;
 height:32px;
 border-radius:50%;
 margin-right:10px;
+object-fit:cover;
 }
 
 .profile-name{
@@ -254,8 +255,8 @@ background:#4a4a4a;
 <!-- PROFILE BOTTOM -->
 
 <div class="sidebar-profile" onclick="openSettings()">
-<img src="https://i.pravatar.cc/40" class="profile-img">
-<div class="profile-name">Aman Prajapati</div>
+<img id="sidebarProfileImg" src="https://i.pravatar.cc/40" class="profile-img">
+<div class="profile-name" id="sidebarProfileName">Your Name</div>
 </div>
 
 </div>
@@ -286,6 +287,7 @@ background:#4a4a4a;
 </div>
 
 <script>
+
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("active");
 }
@@ -293,6 +295,23 @@ document.getElementById("sidebar").classList.toggle("active");
 function openSettings(){
 window.location.href="settings.html";
 }
+
+/* Load profile dynamically */
+window.onload = function(){
+
+let savedName = localStorage.getItem("profileName");
+let savedImage = localStorage.getItem("profileImage");
+
+if(savedName){
+document.getElementById("sidebarProfileName").innerText = savedName;
+}
+
+if(savedImage){
+document.getElementById("sidebarProfileImg").src = savedImage;
+}
+
+}
+
 </script>
 
 </body>
