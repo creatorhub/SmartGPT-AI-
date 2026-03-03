@@ -3,33 +3,172 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Settings - SmartGPT</title>
+
 <style>
+
 body{
 margin:0;
-background:#1e1e1e;
+background:#000;
 color:white;
-font-family:system-ui;
-padding:20px;
+font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-h2{
-font-weight:400;
-}
-.setting-box{
-background:#2a2a2a;
+
+/* Top Bar */
+
+.topbar{
+display:flex;
+align-items:center;
 padding:15px;
-border-radius:8px;
-margin-top:15px;
+font-size:20px;
+font-weight:500;
 }
+
+.back{
+font-size:22px;
+margin-right:15px;
+cursor:pointer;
+}
+
+.container{
+padding:15px;
+}
+
+/* Section Title */
+
+.section-title{
+margin-top:25px;
+margin-bottom:10px;
+color:#aaa;
+font-size:14px;
+}
+
+/* Setting Card */
+
+.setting-card{
+background:#2a2a2a;
+padding:18px;
+border-radius:18px;
+margin-bottom:12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+cursor:pointer;
+}
+
+.setting-card:hover{
+background:#333;
+}
+
+.setting-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.icon{
+font-size:18px;
+opacity:0.8;
+}
+
+.subtext{
+font-size:13px;
+color:#aaa;
+margin-top:3px;
+}
+
+/* Logout */
+
+.logout{
+background:#2a2a2a;
+padding:18px;
+border-radius:18px;
+margin-top:30px;
+color:#ff4d4d;
+display:flex;
+align-items:center;
+gap:10px;
+cursor:pointer;
+}
+
+.logout:hover{
+background:#333;
+}
+
 </style>
 </head>
 <body>
 
-<h2>Settings</h2>
+<div class="topbar">
+<div class="back" onclick="goBack()">←</div>
+<div>Settings</div>
+</div>
 
-<div class="setting-box">Profile</div>
-<div class="setting-box">Account</div>
-<div class="setting-box">Theme</div>
-<div class="setting-box">Logout</div>
+<div class="container">
+
+<div class="section-title">Account</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">👤</div>
+<div>
+<div>Profile</div>
+<div class="subtext">Edit your name & photo</div>
+</div>
+</div>
+</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">📧</div>
+<div>
+<div>Email</div>
+<div class="subtext">your@email.com</div>
+</div>
+</div>
+</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">🎨</div>
+<div>
+<div>Appearance</div>
+<div class="subtext">System (Default)</div>
+</div>
+</div>
+</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">🔔</div>
+<div>Notifications</div>
+</div>
+</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">🔒</div>
+<div>Security</div>
+</div>
+</div>
+
+<div class="setting-card">
+<div class="setting-left">
+<div class="icon">ℹ</div>
+<div>About</div>
+</div>
+</div>
+
+<div class="logout">
+🚪 Log out
+</div>
+
+</div>
+
+<script>
+function goBack(){
+window.location.href="index.html";
+}
+</script>
 
 </body>
 </html>
