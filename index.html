@@ -167,7 +167,7 @@ try{
 let response = await fetch(API_URL,{
 method:"POST",
 headers:{
-"Content-Type":"text/plain"   // ✅ CORS FIX
+"Content-Type":"text/plain"
 },
 body: JSON.stringify({
 action:"chat",
@@ -176,14 +176,22 @@ message:message
 })
 });
 
-let result = await response.json();
+/* Safe response parsing */
+let text = await response.text();
+let result;
+
+try{
+result = JSON.parse(text);
+}catch{
+result = {success:false};
+}
 
 loading.remove();
 
-if(result.success){
+if(result.success && result.reply){
 addMessage(result.reply,"bot");
 }else{
-addMessage("AI error ❌","bot");
+addMessage("AI response error ❌","bot");
 }
 
 }catch(error){
